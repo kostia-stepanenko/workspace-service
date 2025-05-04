@@ -1,8 +1,8 @@
 CREATE TABLE TENANT_CONFIG
 (
-    id                  INT              NOT NULL AUTO_INCREMENT,
-    lifecycleState      VARCHAR(64)      NOT NULL,
-    version             VARCHAR(50)      NOT NULL,
-    customerTenancyId   INT              NOT NULL,
+    id                      INT            AUTO_INCREMENT,
+    customer_tenancy_id     VARCHAR(128)   NOT NULL UNIQUE,
+    lifecycle_state VARCHAR(64) NOT NULL CHECK (lifecycle_state IN ('ACTIVE', 'DELETED')),
+    version                 BIGINT,
     PRIMARY KEY (id)
 );

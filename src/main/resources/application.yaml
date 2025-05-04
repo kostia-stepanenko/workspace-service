@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: workspace-service
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: kostia
+    password: password
+
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      pool-name: HikariCP
+
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 8081

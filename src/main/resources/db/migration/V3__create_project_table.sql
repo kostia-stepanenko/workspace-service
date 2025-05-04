@@ -1,0 +1,14 @@
+--CREATE TABLE PROJECT
+--(
+--id                      INT             AUTO_INCREMENT,
+--compartment_id          INT             NOT NULL,
+--tenant_id               INT             AUTO_INCREMENT,
+--display_name            VARCHAR(200)    NOT NULL,
+--short_name              VARCHAR(20)     NOT NULL,
+--description             VARCHAR(4000),
+--fix the error !!! lifecycle_state         VARCHAR(64),
+--config_status           VARCHAR(32),
+--stores                  VARCHAR(50),
+--groups                  INT
+--PRIMARY KEY (id)
+--);
