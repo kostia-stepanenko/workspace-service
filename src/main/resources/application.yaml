@@ -8,8 +8,12 @@ spring:
     username: kostia
     password: password
 
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      pool-name: HikariCP
 
   h2:
     console:
