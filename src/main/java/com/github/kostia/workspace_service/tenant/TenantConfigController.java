@@ -22,13 +22,15 @@ public class TenantConfigController {
         return tenantConfigRepo.findById(id);
     }
 
-    // READ by customerTenancyId
+    // READ all or by TenantId
     @GetMapping
-    public Iterable<TenantConfig> getAllTenants(@RequestParam Optional<String> customerTenancyId) {
-        if (customerTenancyId.isPresent()) {
-            return tenantConfigRepo.findByCustomerTenancyId(customerTenancyId.get());
+    public ResponseEntity<?> getTenants(@RequestParam(name = "customerTenancyId", required = false) String customerTenancyId) {
+        if (customerTenancyId != null) {
+            return tenantConfigRepo.findByCustomerTenancyId(customerTenancyId)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
         } else {
-            return tenantConfigRepo.findAll();
+            return ResponseEntity.ok(tenantConfigRepo.findAll());
         }
     }
 
