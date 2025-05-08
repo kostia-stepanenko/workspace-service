@@ -23,15 +23,13 @@ public class TenantConfigController {
     }
 
     // READ by customerTenancyId
-    @GetMapping("/by-customer/{customerTenancyId}")
-    public Optional<TenantConfig> getTenantByCustomerTenancyId(@PathVariable String customerTenancyId) {
-        return tenantConfigRepo.findByCustomerTenancyId(customerTenancyId);
-    }
-
-    // READ all
     @GetMapping
-    public Iterable<TenantConfig> getAllTenants() {
-        return tenantConfigRepo.findAll();
+    public Iterable<TenantConfig> getAllTenants(@RequestParam Optional<String> customerTenancyId) {
+        if (customerTenancyId.isPresent()) {
+            return tenantConfigRepo.findByCustomerTenancyId(customerTenancyId.get());
+        } else {
+            return tenantConfigRepo.findAll();
+        }
     }
 
     // CREATE
