@@ -40,4 +40,31 @@ public class TenantConfigController {
         TenantConfig saved = tenantConfigRepo.save(tenantConfig);
         return ResponseEntity.ok(saved);
     }
+
+    // PUT A.K.A UPDATE
+    @PutMapping("/update/{id}")
+    public ResponseEntity<TenantConfig> updateTenant(
+            @PathVariable Integer id,
+            @RequestBody TenantConfig updatedTenant) {
+
+        return tenantConfigRepo.findById(id)
+                .map(existing -> {
+                    updatedTenant.setId(id); // ensure the correct ID is set
+                    TenantConfig saved = tenantConfigRepo.save(updatedTenant);
+                    return ResponseEntity.ok(saved);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTenant(@PathVariable Integer id) {
+        if (tenantConfigRepo.existsById(id)) {
+            tenantConfigRepo.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
