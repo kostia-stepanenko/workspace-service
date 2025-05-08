@@ -2,6 +2,9 @@ package com.github.kostia.workspace_service.tenant;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 public interface TenantConfigRepo extends CrudRepository<TenantConfig, Integer> {
-    Iterable<TenantConfig> findByCustomerTenancyId(String customerTenancyId);
+    Optional<TenantConfig> findByCustomerTenancyId(String customerTenancyId);
+
 }
