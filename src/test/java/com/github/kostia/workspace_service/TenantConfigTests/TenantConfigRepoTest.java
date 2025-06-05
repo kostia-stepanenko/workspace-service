@@ -20,7 +20,7 @@ class TenantConfigRepoTest {
     @Test
     void saveAndFindByCustomerTenancyId() {
         // Arrange
-        TenantConfig config = new TenantConfig(16, "cust-123", "ACTIVE", 1L);
+        TenantConfig config = new TenantConfig(1, "cust-123", "ACTIVE", 1L);
         tenantConfigRepo.save(config);
 
         // Act
@@ -35,7 +35,7 @@ class TenantConfigRepoTest {
     @Test
     void deleteById() {
         // Arrange
-        TenantConfig config = new TenantConfig(16, "cust-123", "ACTIVE", 1L);
+        TenantConfig config = new TenantConfig(1, "cust-123", "ACTIVE", 1L);
         config = tenantConfigRepo.save(config);
 
         // Act
