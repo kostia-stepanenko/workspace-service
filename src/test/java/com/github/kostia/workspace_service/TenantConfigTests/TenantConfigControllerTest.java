@@ -1,4 +1,4 @@
-package com.github.kostia.workspace_service.TenantConfigRepoTest;
+package com.github.kostia.workspace_service.TenantConfigTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kostia.workspace_service.tenant.TenantConfig;
@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,13 +27,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TenantConfigControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-
-
-    //'org.springframework.boot.test.mock.mockito.MockBean' is deprecated and marked for removal
-    // (still works nonetheless)
-    @MockBean
     private TenantConfigRepo tenantConfigRepo;
+
+    @TestConfiguration
+    static class MockConfig {
+        @Bean
+        @Primary
+        public TenantConfigRepo mockTenantConfigRepo() {
+            return Mockito.mock(TenantConfigRepo.class);
+        }
+    }
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -39,32 +47,32 @@ class TenantConfigControllerTest {
     @Test
     @DisplayName("GET /api/tenants should return all tenants")
     void getAllTenants() throws Exception {
-        TenantConfig tenant = new TenantConfig("cust-123", "ACTIVE", 1L);
+        TenantConfig tenant = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
         tenant.setId(1);
         Mockito.when(tenantConfigRepo.findAll()).thenReturn(List.of(tenant));
 
         mockMvc.perform(get("/api/tenants"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customerTenancyId").value("cust-123"));
+                .andExpect(jsonPath("$[0].customerTenancyId").value("cust-456"));
     }
 
     @Test
     @DisplayName("GET /api/tenants?customerTenancyId=cust-123 should return a tenant")
     void getTenantByCustomerTenancyId() throws Exception {
-        TenantConfig tenant = new TenantConfig("cust-123", "ACTIVE", 1L);
+        TenantConfig tenant = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
         tenant.setId(1);
         Mockito.when(tenantConfigRepo.findByCustomerTenancyId("cust-123")).thenReturn(Optional.of(tenant));
 
         mockMvc.perform(get("/api/tenants").param("customerTenancyId", "cust-123"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.customerTenancyId").value("cust-123"));
+                .andExpect(jsonPath("$.customerTenancyId").value("cust-456"));
     }
 
     @Test
     @DisplayName("POST /api/tenants should create a tenant")
     void createTenant() throws Exception {
-        TenantConfig input = new TenantConfig("cust-456", "ACTIVE", 1L);
-        TenantConfig saved = new TenantConfig("cust-456", "ACTIVE", 1L);
+        TenantConfig input = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
+        TenantConfig saved = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
         saved.setId(2);
 
         Mockito.when(tenantConfigRepo.save(any())).thenReturn(saved);
@@ -80,9 +88,9 @@ class TenantConfigControllerTest {
     @Test
     @DisplayName("PUT /api/tenants/update/1 should update tenant if found")
     void updateTenant() throws Exception {
-        TenantConfig existing = new TenantConfig("cust-123", "ACTIVE", 1L);
+        TenantConfig existing = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
         existing.setId(1);
-        TenantConfig updated = new TenantConfig("cust-123", "DELETED", 2L);
+        TenantConfig updated = new TenantConfig(28, "cust-456", "DELETED", 2L);
         updated.setId(1);
 
         Mockito.when(tenantConfigRepo.findById(1)).thenReturn(Optional.of(existing));
@@ -108,12 +116,12 @@ class TenantConfigControllerTest {
     @Test
     @DisplayName("GET /api/tenants/1 should return a tenant by ID")
     void getTenantById() throws Exception {
-        TenantConfig tenant = new TenantConfig("cust-123", "ACTIVE", 1L);
+        TenantConfig tenant = new TenantConfig(28, "cust-456", "ACTIVE", 1L);
         tenant.setId(1);
         Mockito.when(tenantConfigRepo.findById(1)).thenReturn(Optional.of(tenant));
 
         mockMvc.perform(get("/api/tenants/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.customerTenancyId").value("cust-123"));
+                .andExpect(jsonPath("$.customerTenancyId").value("cust-456"));
     }
 }
