@@ -1,10 +1,7 @@
 package com.github.kostia.workspace_service.project;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -27,5 +24,38 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<?> getProjects() {
         return ResponseEntity.ok(projectRepo.findAll());
+    }
+
+    // CREATE
+    @PostMapping
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        Project saved = projectRepo.save(project);
+        return ResponseEntity.ok(saved);
+    }
+
+    // PUT A.K.A UPDATE
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Project> updateProject(
+            @PathVariable Integer id,
+            @RequestBody Project updatedProject) {
+
+        return projectRepo.findById(id)
+                .map(existing -> {
+                    updatedProject.setId(id); // ensure the correct ID is set
+                    Project saved = projectRepo.save(updatedProject);
+                    return ResponseEntity.ok(saved);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Integer id) {
+        if (projectRepo.existsById(id)) {
+            projectRepo.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
