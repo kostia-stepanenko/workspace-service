@@ -34,7 +34,7 @@ public class ProjectController {
     }
 
     // PUT A.K.A UPDATE
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(
             @PathVariable Integer id,
             @RequestBody Project updatedProject) {
