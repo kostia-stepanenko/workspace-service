@@ -8,8 +8,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -30,15 +31,12 @@ public class TenantConfigView extends VerticalLayout {
 
     private TenantConfig currentTenantConfig;
 
-    @Autowired
+
     public TenantConfigView(TenantConfigRepo tenantConfigRepo) {
         this.tenantConfigRepo = tenantConfigRepo;
 
         // Configure Grid
-        grid.setColumns("id", "customerTenancyId", "lifecycleState", "version");
-        grid.setItems(StreamSupport.stream(tenantConfigRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList()));
-        grid.asSingleSelect().addValueChangeListener(event -> editTenantConfig(event.getValue()));
+        grid.setItems(iterableToList(tenantConfigRepo.findAll()));
 
         // Configure Form
         binder.bindInstanceFields(this);
@@ -88,11 +86,14 @@ public class TenantConfigView extends VerticalLayout {
     }
 
     private void refreshGrid() {
-        grid.setItems(StreamSupport.stream(tenantConfigRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList()));
+        grid.setItems(iterableToList(tenantConfigRepo.findAll()));
+    }
+
+    private static <T> List<T> iterableToList(Iterable<T> iterable) {
+        if (iterable == null) {
+            return Collections.emptyList();
+        }
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 }
 
-/*
-http://localhost:8081/tenant-config Url for testing
- */
